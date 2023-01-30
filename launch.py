@@ -290,7 +290,17 @@ def prepare_environment():
                 if not is_installed("xformers"):
                     exit(0)
         elif platform.system() == "Linux":
-            run_pip(f"install {xformers_package}", "xformers")
+            home = os.path.expanduser("~")
+            run(f'cd {home} && [ ! -d "{home}/xformers" ] && git clone https://github.com/facebookresearch/xformers.git || echo "xformers exists"', "Cloning xformers", "Couldn't clone xformers")
+            run(f"cd {home}/xformers && git checkout e23b369c09468 && git submodule update --init --recursive", "Checking out xformers at e23b369c09468", "Couldn't checkout xformers")
+            run(f'"{python}" -m pip install -r requirements.txt', desc=f"Installing requirements", errdesc=f"Couldn't install requirements")
+            run(f'cd {home}/xformers && FORCE_CUDA="1" TORCH_CUDA_ARCH_LIST="8.6" "{python}" -m pip install -e .', desc=f"Building xformers", errdesc=f"Couldn't build xformer", live=True)
+
+    if not is_installed("tensorrt"):
+        tensorrt_path = f'{os.path.expanduser("~")}/venv/lib/python3.10/site-packages/tensorrt'
+        run_pip("install nvidia-tensorrt", "tensorrt")
+        run(f'cd {tensorrt_path} && ln -s libnvinfer.so.8 libnvinfer.so.7', desc=f"linking tensorrt", errdesc=f"Couldn't link tensorrt")
+        run(f'cd {tensorrt_path} && ln -s libnvinfer_plugin.so.8 libnvinfer_plugin.so.7', desc=f"linking tensorrt plugin", errdesc=f"Couldn't link tensorrt plugin")
 
     if not is_installed("pyngrok") and ngrok:
         run_pip("install pyngrok", "ngrok")

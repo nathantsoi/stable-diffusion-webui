@@ -5,6 +5,7 @@
 
 export PATH=/usr/local/cuda-11.6/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-11.6/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$HOME/stable-diffusion-webui/venv/lib/python3.10/site-packages/tensorrt:$LD_LIBRARY_PATH
 
 # Install directory without trailing slash
 #install_dir="/home/$(whoami)"
