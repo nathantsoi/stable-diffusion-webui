@@ -3,6 +3,9 @@
 # Uncomment and change the variables below to your need:#
 #########################################################
 
+export PATH=/usr/local/cuda-11.6/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-11.6/lib64:$LD_LIBRARY_PATH
+
 # Install directory without trailing slash
 #install_dir="/home/$(whoami)"
 
